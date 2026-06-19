@@ -4,15 +4,16 @@ const generateToken = require("../utils/generatetoken");
 const registerUser = async (req, res, next) => {
   try {
     const { fullName, email, password } = req.body;
+    const normalizedEmail = email?.trim().toLowerCase();
 
-    if (!fullName || !email || !password) {
+    if (!fullName || !normalizedEmail || !password) {
       return res.status(400).json({
         success: false,
         message: "Full name, email, and password are required"
       });
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email: normalizedEmail });
 
     if (userExists) {
       return res.status(409).json({
@@ -23,7 +24,7 @@ const registerUser = async (req, res, next) => {
 
     const user = await User.create({
       fullName,
-      email,
+      email: normalizedEmail,
       password
     });
 
@@ -46,15 +47,16 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = email?.trim().toLowerCase();
 
-    if (!email || !password) {
+    if (!normalizedEmail || !password) {
       return res.status(400).json({
         success: false,
         message: "Email and password are required"
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({
