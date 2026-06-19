@@ -5,7 +5,12 @@ const {
   getTripById,
   updateTrip,
   deleteTrip,
-  generateTrip
+  generateTrip,
+  updateTripBudget,
+  updateTripHotels,
+  addActivity,
+  updateActivity,
+  deleteActivity
 } = require("../controllers/tripcontroller");
 const protect = require("../middleware/authmiddleware");
 
@@ -19,6 +24,18 @@ router
   .get(getTrips);
 
 router.post("/:id/generate", generateTrip);
+router.put("/:id/budget", updateTripBudget);
+router.put("/:id/hotels", updateTripHotels);
+
+router.post("/:id/days/:dayId/activities", addActivity);
+router.put(
+  "/:id/days/:dayId/activities/:activityId",
+  updateActivity
+);
+router.delete(
+  "/:id/days/:dayId/activities/:activityId",
+  deleteActivity
+);
 
 router
   .route("/:id")
