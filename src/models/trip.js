@@ -7,7 +7,9 @@ const activitySchema = new mongoose.Schema({
   title: String,
   description: String,
   estimatedCost: Number,
-  location: String
+  location: String,
+  placeDetails: String,
+  mapsSearchQuery: String
 });
 
 const itineraryDaySchema = new mongoose.Schema({
@@ -20,7 +22,16 @@ const hotelSchema = new mongoose.Schema({
   name: String,
   address: String,
   pricePerNight: Number,
-  rating: Number
+  rating: Number,
+  area: String,
+  nearbyLandmark: String,
+  whyRecommended: String,
+  bookingSearchQuery: String,
+  confidence: {
+    type: String,
+    enum: ["high", "medium", "low"],
+    default: "medium"
+  }
 });
 
 const budgetSchema = new mongoose.Schema({

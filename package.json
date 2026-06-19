@@ -4,7 +4,11 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "backend:dev": "node server.js",
+    "start": "node server.js",
+    "frontend:dev": "npm --prefix frontend run dev",
+    "frontend:build": "npm --prefix frontend run build",
+    "build": "npm --prefix frontend run build"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

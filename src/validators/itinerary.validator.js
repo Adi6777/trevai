@@ -21,6 +21,12 @@ const assertNumber = (value, fieldName) => {
   }
 };
 
+const assertText = (value, fieldName) => {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`${fieldName} is required`);
+  }
+};
+
 const validateBudget = (budget) => {
   if (!isPlainObject(budget)) {
     throw new Error("Itinerary budget is required");
@@ -52,12 +58,26 @@ const validateHotels = (hotels) => {
       throw new Error(`hotels.${index} must be an object`);
     }
 
-    if (!hotel.name || !hotel.address) {
-      throw new Error(`hotels.${index} is missing name or address`);
-    }
+    [
+      "name",
+      "address",
+      "area",
+      "nearbyLandmark",
+      "whyRecommended",
+      "bookingSearchQuery"
+    ].forEach((field) => {
+      assertText(hotel[field], `hotels.${index}.${field}`);
+    });
 
     assertNumber(hotel.pricePerNight, `hotels.${index}.pricePerNight`);
     assertNumber(hotel.rating, `hotels.${index}.rating`);
+
+    if (
+      hotel.confidence &&
+      !["high", "medium", "low"].includes(hotel.confidence)
+    ) {
+      throw new Error(`hotels.${index}.confidence is invalid`);
+    }
   });
 };
 
@@ -92,15 +112,16 @@ const validateItineraryDays = (itinerary) => {
         "time",
         "title",
         "description",
-        "location"
+        "location",
+        "placeDetails",
+        "mapsSearchQuery"
       ];
 
       requiredTextFields.forEach((field) => {
-        if (!activity[field]) {
-          throw new Error(
-            `itinerary.${dayIndex}.activities.${activityIndex}.${field} is required`
-          );
-        }
+        assertText(
+          activity[field],
+          `itinerary.${dayIndex}.activities.${activityIndex}.${field}`
+        );
       });
 
       assertNumber(

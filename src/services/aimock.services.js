@@ -32,21 +32,27 @@ const generateTripPlan = async (trip) => {
         title: `Explore central ${destination}`,
         description: "Start with popular landmarks and nearby local streets.",
         estimatedCost: 1200 * travelers,
-        location: destination
+        location: destination,
+        placeDetails: `Use this as a flexible orientation stop around central ${destination}.`,
+        mapsSearchQuery: `${destination} city center`
       },
       {
         time: "01:00 PM",
         title: "Local lunch",
         description: "Try a well-rated local restaurant based on your preferences.",
         estimatedCost: 800 * travelers,
-        location: destination
+        location: destination,
+        placeDetails: "Pick a busy local restaurant with recent reviews before leaving.",
+        mapsSearchQuery: `${destination} local restaurant`
       },
       {
         time: "05:00 PM",
         title: preferences[index % preferences.length],
         description: "Spend the evening on an experience matched to your trip style.",
         estimatedCost: 1500 * travelers,
-        location: destination
+        location: destination,
+        placeDetails: "Keep this slot editable once the traveler picks a specific neighborhood.",
+        mapsSearchQuery: `${destination} ${preferences[index % preferences.length]}`
       }
     ]
   }));
@@ -73,16 +79,37 @@ const generateTripPlan = async (trip) => {
     },
     hotels: [
       {
-        name: `${destination} Comfort Stay`,
+        name: `${destination} central hotel search`,
         address: `Central ${destination}`,
         pricePerNight: 3500,
-        rating: 4.2
+        rating: 4.2,
+        area: `Central ${destination}`,
+        nearbyLandmark: "Main market or transit hub",
+        whyRecommended: "Mock suggestion for testing the hotel card layout.",
+        bookingSearchQuery: `${destination} central hotel booking`,
+        confidence: "low"
       },
       {
-        name: `${destination} City Hotel`,
+        name: `${destination} boutique hotel search`,
         address: `Near main attractions, ${destination}`,
         pricePerNight: 5000,
-        rating: 4.5
+        rating: 4.5,
+        area: `Tourist area, ${destination}`,
+        nearbyLandmark: "Major attractions area",
+        whyRecommended: "Mock higher-comfort option for testing generated plans.",
+        bookingSearchQuery: `${destination} boutique hotel booking`,
+        confidence: "low"
+      },
+      {
+        name: `${destination} family hotel search`,
+        address: `Quiet stay area, ${destination}`,
+        pricePerNight: 4200,
+        rating: 4.1,
+        area: `Residential or calmer area, ${destination}`,
+        nearbyLandmark: "Accessible local transport",
+        whyRecommended: "Mock balanced option for testing multiple hotel suggestions.",
+        bookingSearchQuery: `${destination} family hotel booking`,
+        confidence: "low"
       }
     ],
     itinerary

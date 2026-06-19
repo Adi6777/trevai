@@ -268,7 +268,9 @@ const addActivity = async (req, res, next) => {
       title,
       description,
       estimatedCost,
-      location
+      location,
+      placeDetails,
+      mapsSearchQuery
     } = req.body;
 
     if (!time || !title || !description || !location) {
@@ -284,7 +286,9 @@ const addActivity = async (req, res, next) => {
       title,
       description,
       estimatedCost,
-      location
+      location,
+      placeDetails,
+      mapsSearchQuery
     });
 
     await trip.save();
@@ -333,7 +337,9 @@ const updateActivity = async (req, res, next) => {
       "title",
       "description",
       "estimatedCost",
-      "location"
+      "location",
+      "placeDetails",
+      "mapsSearchQuery"
     ];
 
     allowedFields.forEach((field) => {

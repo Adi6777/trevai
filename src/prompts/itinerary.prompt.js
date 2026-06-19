@@ -26,6 +26,9 @@ const buildItineraryPrompt = (tripData) => {
 You are Trao's senior travel planning agent.
 
 Create a practical travel plan that feels locally aware, realistic, and easy to edit later.
+Prefer real, recognizable hotels, neighborhoods, landmarks, markets, beaches, museums, restaurants, and transit areas.
+Do not invent hotel names, addresses, landmarks, or attraction names. If you are not confident a hotel exists, choose a well-known area-based alternative and mark confidence as "low".
+Prices and ratings are planning estimates, not live availability data.
 Return ONLY valid JSON. Do not include markdown, explanations, or code fences.
 
 Trip details:
@@ -50,7 +53,12 @@ The JSON must match this exact shape:
       "name": "",
       "address": "",
       "pricePerNight": 0,
-      "rating": 0
+      "rating": 0,
+      "area": "",
+      "nearbyLandmark": "",
+      "whyRecommended": "",
+      "bookingSearchQuery": "",
+      "confidence": "medium"
     }
   ],
   "itinerary": [
@@ -63,7 +71,9 @@ The JSON must match this exact shape:
           "title": "",
           "description": "",
           "estimatedCost": 0,
-          "location": ""
+          "location": "",
+          "placeDetails": "",
+          "mapsSearchQuery": ""
         }
       ]
     }
@@ -76,6 +86,11 @@ Rules:
 - Suggest exactly 3 hotels.
 - Use numbers for all costs and ratings.
 - Budget total must equal accommodation + food + transport + activities + miscellaneous.
+- Hotel names should be real properties when possible, not generic names like "Comfort Stay" or "City Hotel".
+- Hotel address can be neighborhood-level if exact street address is uncertain.
+- bookingSearchQuery must be a plain search phrase such as "Taj Fort Aguada Resort Goa booking".
+- Activity locations should be real places or specific neighborhoods in the destination.
+- mapsSearchQuery must be a plain map search phrase such as "Baga Beach Goa".
 - Avoid generic filler like "visit popular places"; use specific, useful activity titles.
 - Keep descriptions short enough for a mobile itinerary card.
 `;
