@@ -6,7 +6,9 @@ const userSchema = new mongoose.Schema(
     fullName: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      minlength: 2,
+      maxlength: 80
     },
 
     email: {
@@ -24,7 +26,14 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6
+      minlength: 8,
+      select: false
+    },
+
+    role: {
+      type: String,
+      enum: ["traveler", "admin"],
+      default: "traveler"
     }
   },
   {

@@ -56,7 +56,9 @@ const loginUser = async (req, res, next) => {
       });
     }
 
-    const user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({ email: normalizedEmail }).select(
+      "+password"
+    );
 
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({

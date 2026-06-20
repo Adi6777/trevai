@@ -1,60 +1,46 @@
 const jwt = require("jsonwebtoken");
+const AppError = require("../utils/appError");
 const User = require("../models/user");
 
-const protect = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const authHeader =
-      req.headers.authorization;
+const getBearerToken = (authHeader) => {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return null;
+  }
 
-    if (
-      !authHeader ||
-      !authHeader.startsWith("Bearer ")
-    ) {
-      return res.status(401).json({
-        success: false,
-        message:
-          "Authentication token missing"
-      });
+  return authHeader.split(" ")[1];
+};
+
+const protect = async (req, res, next) => {
+  try {
+    const token = getBearerToken(req.headers.authorization);
+
+    if (!token) {
+      throw new AppError("Authentication token missing", 401);
     }
 
     if (!process.env.JWT_SECRET) {
-      return res.status(500).json({
-        success: false,
-        message:
-          "JWT secret is not configured"
-      });
+      throw new AppError("JWT secret is not configured", 500);
     }
 
-    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const decoded =
-      jwt.verify(
-        token,
-        process.env.JWT_SECRET
-      );
-
-    req.user =
-      await User.findById(
-        decoded.id
-      ).select("-password");
+    req.user = await User.findById(decoded.id);
 
     if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "User not found"
-      });
+      throw new AppError("User account no longer exists", 401);
     }
 
     next();
   } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized access"
-    });
+    if (error.name === "JsonWebTokenError") {
+      return next(new AppError("Invalid authentication token", 401));
+    }
+
+    if (error.name === "TokenExpiredError") {
+      return next(new AppError("Authentication token expired", 401));
+    }
+
+    next(error);
   }
 };
 
